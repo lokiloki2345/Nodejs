@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Form</title>
+</head>
+<body>
+    <form id="myForm">
+        <input type="text" id="inputText" name="inputText" placeholder="Enter text">
+        <button type="button" onclick="submitForm()">Submit</button>
+        <button type="button" onclick="viewData()">View</button>
+    </form>
+    <div id="dataView"></div>
+
+    <script>
+        async function submitForm() {
+            const inputText = document.getElementById('inputText').value;
+            const response = await fetch('/api/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ text: inputText })
+            });
+            const result = await response.json();
+            alert(result.message);
+        }
+
+        async function viewData() {
+            const response = await fetch('/api/view');
+            const data = await response.json();
+            const dataView = document.getElementById('dataView');
+            dataView.innerHTML = data.map(item => `<p>${item.text}</p>`).join('');
+        }
+    </script>
+</body>
+</html>
